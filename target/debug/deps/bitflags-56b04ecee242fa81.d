@@ -1,0 +1,7 @@
+C:\Users\ender\Desktop\ClassWork\computergraphics\rasterizer\target\debug\deps\bitflags-56b04ecee242fa81.rmeta: C:\Users\ender\.cargo\registry\src\github.com-1ecc6299db9ec823\bitflags-1.3.2\src\lib.rs
+
+C:\Users\ender\Desktop\ClassWork\computergraphics\rasterizer\target\debug\deps\libbitflags-56b04ecee242fa81.rlib: C:\Users\ender\.cargo\registry\src\github.com-1ecc6299db9ec823\bitflags-1.3.2\src\lib.rs
+
+C:\Users\ender\Desktop\ClassWork\computergraphics\rasterizer\target\debug\deps\bitflags-56b04ecee242fa81.d: C:\Users\ender\.cargo\registry\src\github.com-1ecc6299db9ec823\bitflags-1.3.2\src\lib.rs
+
+C:\Users\ender\.cargo\registry\src\github.com-1ecc6299db9ec823\bitflags-1.3.2\src\lib.rs:
