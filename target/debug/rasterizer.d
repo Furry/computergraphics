@@ -1,1 +1,1 @@
-/home/aurora/codeshit/target/debug/rasterizer: /home/aurora/codeshit/src/canvas.rs /home/aurora/codeshit/src/main.rs /home/aurora/codeshit/src/shapes/colors.rs /home/aurora/codeshit/src/shapes/geometry.rs /home/aurora/codeshit/src/shapes/mod.rs /home/aurora/codeshit/src/shapes/rectangle.rs /home/aurora/codeshit/src/shapes/triangle.rs
+/home/aurora/codeshit/target/debug/rasterizer: /home/aurora/codeshit/src/main.rs

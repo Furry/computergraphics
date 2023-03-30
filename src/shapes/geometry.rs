@@ -6,6 +6,12 @@ pub struct Point {
     pub y: f32,
 }
 
+pub struct Point3d {
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
+}
+
 impl PartialOrd for Point {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.y.partial_cmp(&other.y).unwrap())
