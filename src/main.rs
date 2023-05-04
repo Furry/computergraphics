@@ -11,6 +11,28 @@ const VW: f64 = 4.0; // Adjusted viewport width
 const VH: f64 = 3.0; // Adjusted viewport height
 const D: f64 = 3.0; // Adjusted distance from the camera
 
+fn is_triangle_visible(v1: (f64, f64, f64), v2: (f64, f64, f64), v3: (f64, f64, f64), d: f64) -> bool {
+    let screen_vertices = [
+        viewport_to_canvas(v1.0 * d / v1.2, v1.1 * d / v1.2, 0.0, 0.0),
+        viewport_to_canvas(v2.0 * d / v2.2, v2.1 * d / v2.2, 0.0, 0.0),
+        viewport_to_canvas(v3.0 * d / v3.2, v3.1 * d / v3.2, 0.0, 0.0),
+    ];
+
+    // Check if all vertices are in front of the camera
+    let in_front_of_camera = v1.2 > d && v2.2 > d && v3.2 > d;
+
+    // Check if any vertex is inside the screen bounds
+    let mut any_vertex_inside_screen = false;
+    for &(x, y) in &screen_vertices {
+        if x >= 0.0 && x <= CW && y >= 0.0 && y <= CH {
+            any_vertex_inside_screen = true;
+            break;
+        }
+    }
+
+    in_front_of_camera && any_vertex_inside_screen
+}
+
 // Add these functions for rotation matrices
 fn calc_rotation_x(angle: f64) -> [[f64; 3]; 3] {
     let cos_angle = angle.cos();
@@ -135,9 +157,17 @@ fn draw_cube(
         (rotated_vertices[3], rotated_vertices[4], rotated_vertices[7], Color::RGB(0, 255, 0)),
     ];
     
+    let mut count = 0;
     for triangle in &triangles {
-        draw_triangle(canvas, triangle.0, triangle.1, triangle.2, triangle.3, dx, dy, d)?;
+        if is_triangle_visible(triangle.0, triangle.1, triangle.2, d) {
+            count += 1;
+            draw_triangle(canvas, triangle.0, triangle.1, triangle.2, triangle.3, dx, dy, d)?;
+        }
     }
+
+    // Clear terminal then print
+    print!("{}[2J", 27 as char);
+    println!("{} triangles drawn", count);
         
     Ok(())
 }
@@ -162,27 +192,13 @@ fn main() -> Result<(), String> {
     let mut ry: f64 = 0.0;
     let mut rz: f64 = 0.0;
 
-    let hallway_length: i32 = 10;
-    let distance_between_cubes: f64 = 1.0;
-
     'running: loop {
         canvas.set_draw_color(Color::RGB(0, 0, 0));
         canvas.clear();
 
-        // draw_cube(&mut canvas, dx, dy, d, rx, ry, rz)?;
+        draw_cube(&mut canvas, dx, dy, d, rx, ry, rz)?;
 
-        for i in 0..hallway_length {
-            let z_offset = i as f64 * distance_between_cubes;
-            draw_cube(
-                &mut canvas,
-                dx,
-                dy,
-                d + z_offset,
-                rx,
-                ry,
-                rz // Apply z_offset to the z-axis rotation
-            )?;
-        }
+        
         canvas.present();
         
         for event in sdl_context.event_pump()?.poll_iter() {
@@ -201,12 +217,12 @@ fn main() -> Result<(), String> {
                 Keycode::Left => dx -= 10.0,
                 Keycode::Right => dx += 10.0,
                 Keycode::Space => d *= 0.9, // Zoom in by decreasing D
-                Keycode::Q => rz += 0.1,
-                Keycode::E => rz -= 0.1,
-                Keycode::W => rx += 0.1,
-                Keycode::S => rx -= 0.1,
-                Keycode::A => ry += 0.1,
-                Keycode::D => ry -= 0.1,
+                Keycode::Q => rz += 0.001,
+                Keycode::E => rz -= 0.001,
+                Keycode::W => rx += 0.001,
+                Keycode::S => rx -= 0.001,
+                Keycode::A => ry += 0.001,
+                Keycode::D => ry -= 0.001,
                 _ => {
                     if keymod.contains(sdl2::keyboard::Mod::LSHIFTMOD)
                         || keymod.contains(sdl2::keyboard::Mod::RSHIFTMOD)
@@ -218,7 +234,7 @@ fn main() -> Result<(), String> {
             _ => {}
         }
         }
-        std::thread::sleep(std::time::Duration::from_millis(100));
+        std::thread::sleep(std::time::Duration::from_millis(1));
     }
 
     Ok(())
